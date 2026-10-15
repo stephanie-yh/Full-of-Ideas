@@ -10,22 +10,7 @@
 <meta property="og:title" content="滿滿Ideas｜Stephanie 的作品集">
 <meta property="og:description" content="Hi~ I'm Stephanie! Welcome to... my Brain!">
 <meta property="og:image" content="media/0c206c07c7.jpg">
-<style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0;padding:0}img,video{max-width:100%}
-/* ---------- dice cursor (desktop only) ---------- */
-@media (hover:hover) and (pointer:fine){
-  html.dice-on, html.dice-on *{cursor:none!important}
-  html.dice-on input, html.dice-on textarea, html.dice-on select, html.dice-on [contenteditable]{cursor:text!important}
-}
-.dk{position:fixed;left:0;top:0;pointer-events:none;z-index:2147483000;will-change:transform}
-.dk b{position:absolute;left:0;top:0;width:24px;height:24px;margin:-4px 0 0 -4px;display:block;transition:width .2s cubic-bezier(.2,.8,.3,1),height .2s cubic-bezier(.2,.8,.3,1),opacity .15s;transform:rotate(-8deg)}
-.dk svg{width:100%;height:100%;display:block}
-.dk.big b{width:30px;height:30px;animation:dkWiggle .5s ease-in-out infinite alternate}
-.dk.roll b{animation:dkRoll .45s cubic-bezier(.3,.7,.3,1)}
-.dk.hide b{opacity:0}
-@keyframes dkWiggle{from{transform:rotate(-12deg)}to{transform:rotate(10deg)}}
-@keyframes dkRoll{0%{transform:rotate(-8deg) scale(1)}40%{transform:rotate(200deg) scale(1.25)}100%{transform:rotate(352deg) scale(1)}}
-@media (prefers-reduced-motion:reduce){.dk b{animation:none!important;transition:none}}
-</style>
+<style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0;padding:0}img,video{max-width:100%}</style>
 <title>滿滿Ideas</title>
 <style>
 @font-face{font-family:"Chiron GoRound TC";src:url("gr-350N.woff") format("woff");font-weight:100 449;font-display:swap}
@@ -317,10 +302,13 @@ html,body{overflow-x:clip}
 .order .no b{display:block;color:var(--ink);font-family:var(--f-body);font-size:14px;letter-spacing:0;text-transform:none;font-weight:600}
 .order h3{font-size:20px;font-weight:800}
 .order h3 span{font-weight:500;color:var(--muted);font-size:15px;margin-left:8px}
-.order ul{margin:8px 0 0;padding-left:1.1em;color:var(--muted)}
+.order ul{margin:8px 0 0;padding-left:0;list-style:none;color:var(--muted)}
 .status{align-self:start;font-family:var(--f-mono);font-size:12px;border-radius:999px;padding:4px 12px;border:1.5px solid var(--ink);white-space:nowrap}
 .status.done{background:var(--ink);color:var(--butter)}
-.status.live{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.status.live{background:var(--accent);color:#fff;border-color:var(--ink);font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.status.live::before{content:"";width:7px;height:7px;border-radius:50%;background:#FCF0B0;box-shadow:0 0 0 0 rgba(252,240,176,.9);animation:livePulse 1.4s ease-out infinite}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(252,240,176,.9)}100%{box-shadow:0 0 0 7px rgba(252,240,176,0)}}
+@media (prefers-reduced-motion:reduce){.status.live::before{animation:none}}
 
 /* footer */
 footer{background:var(--accent);color:var(--accent-ink);padding-block:56px 40px}
@@ -441,6 +429,42 @@ footer h2{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,7vw,
 .lb-thumbs button[aria-current="true"]{border-color:var(--accent)}
 .lb-thumbs img{width:100%;height:100%;object-fit:cover}
 @media (max-width:600px){.lb-stage{padding:8px 0}.lb-nav{background:rgba(0,0,0,.55)}}
+
+/* ---------- dice cursor (desktop only) ---------- */
+@media (hover:hover) and (pointer:fine){
+  html.dice-on, html.dice-on *{cursor:none!important}
+  html.dice-on input, html.dice-on textarea, html.dice-on select, html.dice-on [contenteditable]{cursor:text!important}
+}
+.dk{position:fixed;left:0;top:0;pointer-events:none;z-index:2147483000;will-change:transform}
+.dk b{position:absolute;left:0;top:0;width:24px;height:24px;margin:-4px 0 0 -4px;display:block;transition:width .2s cubic-bezier(.2,.8,.3,1),height .2s cubic-bezier(.2,.8,.3,1),opacity .15s;transform:rotate(-8deg)}
+.dk svg{width:100%;height:100%;display:block}
+.dk.big b{width:30px;height:30px;animation:dkWiggle .5s ease-in-out infinite alternate}
+.dk.roll b{animation:dkRoll .45s cubic-bezier(.3,.7,.3,1)}
+.dk.hide b{opacity:0}
+@keyframes dkWiggle{from{transform:rotate(-12deg)}to{transform:rotate(10deg)}}
+@keyframes dkRoll{0%{transform:rotate(-8deg) scale(1)}40%{transform:rotate(200deg) scale(1.25)}100%{transform:rotate(352deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.dk b{animation:none!important;transition:none}}
+
+/* desktop: works with video + images show video first, images stacked below */
+.pd .stack{display:none}
+@media (min-width:821px){
+  .pd.mix .gallery>.main,.pd.mix .gallery>.thumbs,.pd.mix .gallery>.prog{display:none!important}
+  .pd.mix .stack{display:grid;gap:16px;position:relative}
+  .pd.mix .stack>.tagbox{position:absolute;left:12px;top:12px;z-index:2}
+  .pd.mix .st-item{display:flex;justify-content:center}
+  .pd.mix .st-item video{width:100%;max-height:80svh;object-fit:contain;display:block;background:transparent}
+  .pd.mix .st-item img{width:100%;height:auto;display:block;cursor:zoom-in}
+}
+
+.snd-hint{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);z-index:3;border:1.5px solid var(--ink);background:#FFFDF5;color:var(--ink);font:700 14px var(--f-body);padding:8px 14px;border-radius:999px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;white-space:nowrap;animation:sndBob 1.6s ease-in-out infinite}
+.snd-hint[hidden]{display:none!important}
+.st-item{position:relative}
+@keyframes sndBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.snd-hint{animation:none}}
+
+.pl-dots{position:absolute;right:12px;top:12px;display:flex;gap:5px;z-index:3}
+.pl-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,253,245,.55);border:1px solid rgba(46,36,24,.4)}
+.pl-dots i.on{background:#FFFDF5;border-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -451,7 +475,7 @@ footer h2{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,7vw,
   <div class="wrap store-row">
     <a class="logo" href="#top" aria-label="滿滿Ideas，回到首頁"><span class="wm" aria-hidden="true"><span class="wm-z">滿滿</span><span style="transform:translateY(-0.08em) rotate(-6deg)">I</span><span style="transform:translateY(0.06em) rotate(5deg)">d</span><span style="transform:translateY(-0.12em) rotate(-4deg)">e</span><span style="transform:translateY(0.03em) rotate(9deg)">a</span><span style="transform:translateY(-0.06em) rotate(-7deg)">s</span></span></a>
     <nav class="links" aria-label="主選單">
-      <a href="#top">首頁</a><a href="#why">做廣告？</a><a href="#shop">作品商店</a>
+      <a href="#top">首頁</a><a href="#why">做廣告？</a><a href="#shop">作品商店</a><a href="#orders">訂單紀錄</a>
     </nav>
     <button class="cart-btn" id="cartBtn" aria-label="開啟購物車">購物車 <span class="cart-count" id="cartCount">0</span></button>
   </div>
@@ -470,8 +494,7 @@ footer h2{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,7vw,
           <p class="line2-cap" id="line2"></p>
         </div>
         <div class="hero-cta">
-          <a class="btn primary" href="#shop">逛逛作品 →</a>
-          <a class="btn" href="#why">做廣告？</a>
+          <a class="btn primary" href="#why">做廣告？ →</a>
         </div>
         <div class="badge-line" id="badges"></div>
         </div>
@@ -549,7 +572,7 @@ footer h2{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,7vw,
 
 <script>
 /* snapshot of the saved content, so visitors who are not signed in see the current site */
-const DEFAULTS = {"profile": {"badges": [], "education": "文化大學 廣告學系", "email": "stephanie.yh@mdcg.tw", "hiLine": "Hi~ I'm Stephanie!", "line1": "24 years old and building a fulfilling life.", "line2": "making sure great ideas become reality.", "nameZh": "吳宜軒 Stephanie", "phone": "0979383184", "photo": "asset:0c206c07c705eb58be895ea523044285:image", "photoX": 66, "photoY": 100, "photoZoom": 102, "receipt": [{"item": "Insight", "qty": "×1"}, {"item": "Aspiration", "qty": "×1"}, {"item": "Strategy", "qty": "×1"}, {"item": "Big Idea", "qty": "×∞"}], "receiptTotal": "100%", "seeded": true, "ticker": ["NEW ARRIVAL · 2026 作品集上架", "全館好點子 免運直送", "買了可以慢慢反省，不買就只能後悔", "加入購物車 = 跟我聯絡"], "tools": [{"abbr": "Claude", "icon": "asset:35fb74e2fdfeaf47aad444936cf2b2f2:image", "name": "Claude"}, {"abbr": "ChatGPT", "icon": "asset:00793af8dc67f422592085c1e85c66ab:image", "name": "ChatGPT"}, {"abbr": "Gemini", "icon": "asset:7c1a35091a18b05f4fa4476fa59e128a:image", "name": "Gemini"}, {"abbr": "Ai", "icon": "asset:8dab9a53bc10573a5e26c53f486c07af:image", "name": "Illustrator"}, {"abbr": "Ps", "icon": "asset:c3bc5b0965649b4e1834f5f145fffb1b:image", "name": "Photoshop"}, {"abbr": "Pr", "icon": "asset:fe151e34d6eb620060531f3231445f6c:image", "name": "Framer"}, {"abbr": "Cc", "icon": "asset:d15c908b5206d9b31e5ebe8e2661f87b:image", "name": "CapCut"}, {"abbr": "Canva", "icon": "asset:429aadbbb81d0ffdf97b73e90131b2a7:image", "name": "Canva"}, {"abbr": "Flow", "icon": "asset:8e3acd705472dd7fc598fc07ebe12c6e:image", "name": "Flow"}, {"abbr": "AI Studio", "icon": "asset:ca610ffc6dd3f3fc2876920c693ac3f3:image", "name": "AI Studio"}], "toolsHeading": "Here are the tools I use to make the magic happen.", "welcome": "Welcome to... my Brain!", "whyA": "因為我很愛購物，也很容易被好廣告打動。\n一個句子、一個畫面，就能讓我對商品產生無限想像。\n於是，我想從被廣告打動的人，成為創造心動的人！\n畢竟⋯⋯買到喜歡的東西，就是", "whyBg": "", "whyCaption": "我不是在購物，就是在購物的路上", "whyPhotos": ["img/why-street.jpg", "img/why-basket.jpg"], "whyPunch": "爽", "whyQ": "為什麼想做廣告？"}, "works": [{"category": "", "client": "", "date": "", "desc": "# 創意發想\n透過質化訪談與社群 #IKEAHack 觀察，發現消費者習慣來IKEA邊逛邊尋找生活解方，也經常賦予產品新的用途，例如將門把改為黑膠收納。因此，選擇放大此訊號，提出核心概念「連 IKEA 都想不到」——以幽默的語氣讚賞：大家的創意，連 IKEA 都沒預料到。\n\n# AI 工具應用\n## Google AI Studio\n製作「Made with IKEA」平台 prototype，募集消費者生活創意，並串接官網商品與門市庫存。\n## Flow\n將腳本轉化為影片，讓商品以第一人稱說出自己的夢想，再以消費者賦予的新用途製造反差，用詼諧語氣呈現商品的另一種人生。\n\n# Takeaway｜我學到的事\n企劃初期因想法太發散且什麼都想做，反而沒能收斂成一眼就懂的 Campaign。這讓我學到：==廣告要聚焦一件事，把它放大；選擇一多，就沒有記憶點。==\n這次未將 Slogan 一貫地延伸至每則線上貼文，未來會用==樹狀圖梳理訊息架構，確保各項執行緊扣核心創意。==", "hot": true, "id": "wmv4wc4gr", "images": ["asset:b0dea7630b726920f0d776006c1b6983:image", "asset:efb7b6dd936bc8cc9350ad0d28ec9180:video"], "moreLink": "https://drive.google.com/file/d/1TOTcaivEVi9WS6WzT6--KfygwAwzx5r3/view?usp=drive_link", "order": 1, "reels": [], "role": "", "title": "連IKEA都想不到", "tools": "", "videoLink": ""}, {"category": "", "client": "", "date": "", "desc": "# 創意發想\n以「好事將近，聞香便知」為策略主軸，串聯各線上接觸點，並同時整合合作外送平台將「訂單」改為「好事」->你的好事即將抵達。\n\n# AI 工具應用\n## Flow\n生成三支前導影片，以麻油紙包雞作為分享好事的「煙霧彈」，幽默呈現想藏卻藏不住的炫耀心情。\n## ChatGPT\n回應客戶對美食視覺衝擊的要求，此次==Food Demo也於提案中獲得高分==。\n## Suno\n製作「好事開飯」UGC 卡點音樂，以「一口雞、一口飯」呼應食用情境，搭配「雞沾醬、飯配醬」的歌詞，傳遞口口都有醬的美味，完整建立飯平台的資訊。\n\n# Takeaway｜我學到的事\n廣告人應該==避免自嗨、主觀的硬連結，策略必須扎根於客觀的市場、競品與消費者洞察==，才能推導出具說服力的切入點。這次的 Campaign，我們花太多篇幅在包裝「好事」，卻忽視了產品本身才是幫消費者解決問題的主角。", "hot": false, "id": "wmv4vi5n6", "images": ["asset:a9867970aa6009296b35ab47e4a3bef2:image", "asset:96261784cbd037a41223babb699bab46:video"], "moreLink": "https://drive.google.com/file/d/1zXutL2Bw4RaYM347N95ekIbynVu56XIj/view?usp=drive_link", "order": 2, "reels": [], "role": "線上社群", "title": "好事將近，聞香便知", "tools": "", "videoLink": "https://youtube.com/shorts/QJfqakfT8Tg"}, {"category": "影音行銷", "client": "Sealf 海上精靈", "cover": "asset:bca396d36f8618ee86cbee03456f0343:image", "date": "2025.05–2026.4", "desc": "從門市顧客的試穿問題與回饋中找到內容切角，轉化為短影音腳本，搭配活動檔期與主推商品，獨立完成企劃、拍攝與剪輯，讓==第一線觀察成為貼近消費者的社群內容==，成功帶動門市預約。\n同時參與新品拍攝，負責規劃 Rundown，並控管拍攝進度與流程。", "hot": false, "id": "w06", "images": [], "moreLink": "https://www.instagram.com/sealf_tw/", "order": 3, "reels": [{"likes": "1441", "note": "", "video": "asset:a9b195343d08e639f40144e4f7f5cd52:video", "views": "150K"}, {"likes": "3889", "note": "", "video": "asset:7fed6b84791eb8e551c0a5e725f1dd8a:video", "views": "178K"}, {"likes": "2079", "note": "", "video": "asset:b6ffbd51237fcc3d1f6ee3aa0fe974e7:video", "views": "187K"}], "role": "影音行銷", "title": "＠Sealf Reels", "tools": "CapCut"}, {"category": "品牌設計", "client": "", "date": "", "desc": "# 設計理念\n延伸集團理念「家的延伸、幸福的傳遞」，透過溫暖的奶油色與圓角化的 LOGO 外框，柔化原有的銳利感，將品牌的關懷與包容轉化為具體的視覺語言。\n\n# Takeaway｜我學到的事\n實習第一個月即負責名片設計，從概念、配色到細節，透過與執行長及主管多次討論，逐步釐清需求、完善設計。這次經驗不僅建立了我的品牌思維，也讓我體會到==回饋能開啟新的思考方向、延伸創意。同時提升了跨部門溝通與需求理解的能力==。", "hot": true, "id": "w01", "images": ["asset:346c11ed4b70a5e772c69ebec56daf35:image", "asset:e03188e264688b2f94e5a7eeae9748cc:image", "asset:8d1d9b6d252026e8bec2848fc4b3a523:image"], "moreLink": "", "order": 4, "reels": [], "role": "", "title": "寬悅不動產-名片設計", "tools": "Illustrator, Photoshop", "videoLink": ""}, {"category": "平面設計", "client": "", "date": "", "desc": "在房仲產業，==節慶賀卡是維繫客戶關係的重要接觸點==。\n\n# 我負責的部分\n- 每個節慶發展兩版設計，供主管討論與選擇\n- 為==公司上百位業務製作專屬賀卡==，放上各自的職位、姓名、電話與 QR Code\n\n# Takeaway｜我學到的事\n這項工作讓我練習了==資料整理、細節核對==與溝通協作，確保每一份都正確傳遞業務資訊。", "hot": false, "id": "w04", "images": ["asset:a01158857f6e82fc62cc15b8eed3c5d3:image", "asset:afc418b5b79e30ffcbd36f6522ba3e27:image", "asset:6d4e1a505ef2e592dea1c34cf78abbd8:image"], "moreLink": "", "order": 6, "reels": [], "role": "", "title": "中信房屋-節慶賀卡", "tools": "Illustrator"}, {"category": "個人品牌", "client": "@stephsuan | Personal Branding", "date": "", "desc": "𓃗\n以 2026 馬年為靈感，運用台灣人最愛的諧音梗，發想「馬上發財」與「馬上實現」兩句 Slogan，製作可免費下載的月曆桌布，將新年祝福變成日常陪伴，吸引分享與追蹤，經營個人 IG。", "hot": true, "id": "w12", "images": ["asset:112afd438cd604ca1217fbd8ddc15bd1:image", "asset:37d85b2efe96fbd3ab9daa7dc4f92358:image"], "moreLink": "https://www.instagram.com/p/DUM9y_TEum7/?igsh=aHFvbnJtcDNjaGl3", "order": 14, "reels": [], "role": "", "title": "2026 馬上發財", "tools": "Illustrator, Photoshop"}], "exp": [{"company": "寬悅不動產集團", "end": "2025.08", "id": "e1", "order": 2, "points": ["撰寫品牌及媒體行銷企劃案", "經營公司官方粉絲專頁，獨立負責視覺與內容規劃", "每月彙整、分析粉絲專頁成效數據"], "role": "行銷企劃實習", "start": "2024.07", "status": "已完成"}, {"company": "Sealf 海上精靈", "end": "2026.04", "id": "e2", "order": 1, "points": ["Instagram Reels 內容企劃製作", "活動企劃與執行（雙11、品牌 8 週年）"], "role": "影音行銷", "start": "2025.05", "status": "已完成"}, {"company": "產學合作-台新銀行公益慈善基金會", "end": "2025.03", "id": "e3", "order": 3, "points": ["經營IG粉絲團，將投票流程與規則轉化為易懂內容，策劃公益議題分享，活動累計吸引 17,171 人參與投票。"], "role": "活動企劃、社群小編", "start": "2024.07", "status": "已完成"}]};
+const DEFAULTS = {"profile": {"badges": [], "education": "文化大學 廣告學系", "email": "stephanie.yh@mdcg.tw", "hiLine": "Hi~ I'm Stephanie!", "line1": "24 years old and building a fulfilling life.", "line2": "making sure great ideas become reality.", "nameZh": "吳宜軒 Stephanie", "phone": "0979383184", "photo": "asset:0c206c07c705eb58be895ea523044285:image", "photoX": 66, "photoY": 100, "photoZoom": 102, "receipt": [{"item": "Insight", "qty": "×1"}, {"item": "Aspiration", "qty": "×1"}, {"item": "Strategy", "qty": "×1"}, {"item": "Big Idea", "qty": "×∞"}], "receiptTotal": "100%", "seeded": true, "ticker": ["NEW ARRIVAL · 2026 作品集上架", "全館好點子 免運直送", "買了可以慢慢反省，不買就只能後悔", "加入購物車 = 跟我聯絡"], "tools": [{"abbr": "Claude", "icon": "asset:35fb74e2fdfeaf47aad444936cf2b2f2:image", "name": "Claude"}, {"abbr": "ChatGPT", "icon": "asset:00793af8dc67f422592085c1e85c66ab:image", "name": "ChatGPT"}, {"abbr": "Gemini", "icon": "asset:7c1a35091a18b05f4fa4476fa59e128a:image", "name": "Gemini"}, {"abbr": "Ai", "icon": "asset:8dab9a53bc10573a5e26c53f486c07af:image", "name": "Illustrator"}, {"abbr": "Ps", "icon": "asset:c3bc5b0965649b4e1834f5f145fffb1b:image", "name": "Photoshop"}, {"abbr": "Pr", "icon": "asset:fe151e34d6eb620060531f3231445f6c:image", "name": "Framer"}, {"abbr": "Cc", "icon": "asset:d15c908b5206d9b31e5ebe8e2661f87b:image", "name": "CapCut"}, {"abbr": "Canva", "icon": "asset:429aadbbb81d0ffdf97b73e90131b2a7:image", "name": "Canva"}, {"abbr": "Flow", "icon": "asset:8e3acd705472dd7fc598fc07ebe12c6e:image", "name": "Flow"}, {"abbr": "AI Studio", "icon": "asset:ca610ffc6dd3f3fc2876920c693ac3f3:image", "name": "AI Studio"}], "toolsHeading": "Here are the tools I use to make the magic happen.", "welcome": "Welcome to... my Brain!", "whyA": "因為我很愛購物，也很容易被好廣告打動。\n一個句子、一個畫面，就能讓我對商品產生無限想像。\n於是，我想從被廣告打動的人，成為創造心動的人！\n畢竟⋯⋯買到喜歡的東西，就是", "whyBg": "", "whyCaption": "我不是在購物，就是在購物的路上", "whyPhotos": ["img/why-street.jpg", "img/why-basket.jpg"], "whyPunch": "爽", "whyQ": "為什麼想做廣告？"}, "works": [{"category": "", "client": "", "date": "", "desc": "# 創意發想\n透過質化訪談與社群 #IKEAHack 觀察，發現消費者習慣來IKEA邊逛邊尋找生活解方，也經常賦予產品新的用途，例如將門把改為黑膠收納。因此，選擇放大此訊號，提出核心概念「連 IKEA 都想不到」——以幽默的語氣讚賞：大家的創意，連 IKEA 都沒預料到。\n\n# AI 工具應用\n## Google AI Studio\n製作「Made with IKEA」平台 prototype，募集消費者生活創意，並串接官網商品與門市庫存。\n## Flow\n將腳本轉化為影片，讓商品以第一人稱說出自己的夢想，再以消費者賦予的新用途製造反差，用詼諧語氣呈現商品的另一種人生。\n\n# Takeaway｜我學到的事\n企劃初期因想法太發散且什麼都想做，反而沒能收斂成一眼就懂的 Campaign。這讓我學到：==廣告要聚焦一件事，把它放大；選擇一多，就沒有記憶點。==\n這次未將 Slogan 一貫地延伸至每則線上貼文，未來會用==樹狀圖梳理訊息架構，確保各項執行緊扣核心創意。==", "hot": true, "id": "wmv4wc4gr", "images": ["asset:b0dea7630b726920f0d776006c1b6983:image", "asset:efb7b6dd936bc8cc9350ad0d28ec9180:video"], "moreLink": "https://drive.google.com/file/d/1TOTcaivEVi9WS6WzT6--KfygwAwzx5r3/view?usp=drive_link", "order": 1, "reels": [], "role": "", "title": "連IKEA都想不到", "tools": "", "videoLink": ""}, {"category": "", "client": "", "date": "", "desc": "# 創意發想\n以「好事將近，聞香便知」為策略主軸，串聯各線上接觸點，並同時整合合作外送平台將「訂單」改為「好事」->你的好事即將抵達。\n\n# AI 工具應用\n## Flow\n生成前導影片，以麻油紙包雞作為分享好事的「煙霧彈」，幽默呈現想藏卻藏不住的炫耀心情。\n## ChatGPT\n回應客戶對美食視覺衝擊的要求，此次==Food Demo也於提案中獲得高分==。\n## Suno\n製作「好事開飯」UGC 卡點音樂，以「一口雞、一口飯」呼應食用情境，搭配「雞沾醬、飯配醬」的歌詞，傳遞口口都有醬的美味，完整建立飯平台的資訊。\n\n# Takeaway｜我學到的事\n廣告人應該==避免自嗨、主觀的硬連結，策略必須扎根於客觀的市場、競品與消費者洞察==，才能推導出具說服力的切入點。這次的 Campaign，我們花太多篇幅在包裝「好事」，卻忽視了產品本身才是幫消費者解決問題的主角。", "hot": false, "id": "wmv4vi5n6", "images": ["asset:28c93df40ddcc7af48ab176e500719e0:video", "asset:7279265c545c078bac396ce82281b1ab:video", "asset:a9867970aa6009296b35ab47e4a3bef2:image"], "moreLink": "https://drive.google.com/file/d/1zXutL2Bw4RaYM347N95ekIbynVu56XIj/view?usp=drive_link", "order": 2, "reels": [], "role": "社群企劃", "title": "好事將近，聞香便知", "tools": "", "videoLink": "https://youtube.com/shorts/QJfqakfT8Tg"}, {"category": "影音行銷", "client": "Sealf 海上精靈", "cover": "asset:bca396d36f8618ee86cbee03456f0343:image", "date": "2025.05–2026.4", "desc": "從門市顧客的試穿問題與回饋中找到內容切角，轉化為短影音腳本，搭配活動檔期與主推商品，獨立完成企劃、拍攝與剪輯，讓==第一線觀察成為貼近消費者的社群內容==，成功帶動門市預約。\n同時參與新品拍攝，負責規劃 Rundown，並控管拍攝進度與流程。", "hot": false, "id": "w06", "images": [], "moreLink": "https://www.instagram.com/sealf_tw/", "order": 3, "reels": [{"likes": "2844", "note": "", "video": "asset:92a6c48a9b149a56df6c351ebd2e5d31:video", "views": "465K"}, {"likes": "3889", "note": "", "video": "asset:7fed6b84791eb8e551c0a5e725f1dd8a:video", "views": "178K"}, {"likes": "2079", "note": "", "video": "asset:b6ffbd51237fcc3d1f6ee3aa0fe974e7:video", "views": "187K"}], "role": "影音行銷", "title": "＠Sealf Reels", "tools": "CapCut"}, {"category": "品牌設計", "client": "", "date": "", "desc": "# 設計理念\n延伸集團理念「家的延伸、幸福的傳遞」，透過溫暖的奶油色與圓角化的 LOGO 外框，柔化原有的銳利感，將品牌的關懷與包容轉化為具體的視覺語言。\n\n# Takeaway｜我學到的事\n實習第一個月即負責名片設計，從概念、配色到細節，透過與執行長及主管多次討論，逐步釐清需求、完善設計。這次經驗不僅建立了我的品牌思維，也讓我體會到==回饋能開啟新的思考方向、延伸創意。同時提升了跨部門溝通與需求理解的能力==。", "hot": true, "id": "w01", "images": ["asset:346c11ed4b70a5e772c69ebec56daf35:image", "asset:e03188e264688b2f94e5a7eeae9748cc:image", "asset:8d1d9b6d252026e8bec2848fc4b3a523:image"], "moreLink": "", "order": 4, "reels": [], "role": "", "title": "寬悅不動產 名片設計", "tools": "Illustrator, Photoshop", "videoLink": ""}, {"category": "平面設計", "client": "", "date": "", "desc": "在房仲產業，==節慶賀卡是維繫客戶關係的重要接觸點==。\n\n# 我負責的部分\n- 每個節慶發展兩版設計，供主管討論與選擇\n- 為==公司上百位業務製作專屬賀卡==，放上各自的職位、姓名、電話與 QR Code\n\n# Takeaway｜我學到的事\n這項工作讓我練習了==資料整理、細節核對==與溝通協作，確保每一份都正確傳遞業務資訊。", "hot": false, "id": "w04", "images": ["asset:a01158857f6e82fc62cc15b8eed3c5d3:image", "asset:afc418b5b79e30ffcbd36f6522ba3e27:image", "asset:6d4e1a505ef2e592dea1c34cf78abbd8:image"], "moreLink": "", "order": 6, "reels": [], "role": "", "title": "中信房屋 節慶賀卡", "tools": "Illustrator"}, {"category": "個人品牌", "client": "@stephsuan | Personal Branding", "date": "", "desc": "𓃗\n以 2026 馬年為靈感，運用台灣人最愛的諧音梗，發想「馬上發財」與「馬上實現」兩句 Slogan，製作可免費下載的月曆桌布，將新年祝福變成日常陪伴，吸引分享與追蹤，經營個人 IG。", "hot": true, "id": "w12", "images": ["asset:112afd438cd604ca1217fbd8ddc15bd1:image", "asset:37d85b2efe96fbd3ab9daa7dc4f92358:image"], "moreLink": "https://www.instagram.com/p/DUM9y_TEum7/?igsh=aHFvbnJtcDNjaGl3", "order": 14, "reels": [], "role": "", "title": "2026 馬上發財", "tools": "Illustrator, Photoshop"}], "exp": [{"company": "米蘭營銷策劃股份有限公司", "end": "持續改良中", "id": "emv9e2woj", "order": 1, "points": ["Ingredients：Insights · Slogans · AI Videos · Original Song · Platform Prototype · Reflections · Aspirations ×∞"], "role": "米果實習生", "start": "2026.07", "status": "出貨中"}, {"company": "Sealf 海上精靈", "end": "2026.04", "id": "e2", "order": 2, "points": ["Ingredients：Store Insights · Short-Form Scripts · Shooting & Editing · Two Campaigns: Double 11 & 8th Anniversary"], "role": "影音行銷", "start": "2025.05", "status": "已完成"}, {"company": "寬悅不動產集團", "end": "2025.08", "id": "e1", "order": 3, "points": ["Ingredients：Marketing Proposals · Fan Page Content · Visual Design · Business Card Design ×1 · Monthly Data Reports"], "role": "行銷企劃實習", "start": "2024.07", "status": "已完成"}, {"company": "產學合作-台新銀行公益慈善基金會", "end": "2025.03", "id": "e3", "order": 4, "points": ["Ingredients：Charity Campaign · Social Media Content · Easy-to-Read Rules · Brand 15th Anniversary Campaign Planning & Promotion"], "role": "活動企劃、社群小編", "start": "2024.07", "status": "已完成"}]};
 
 
 /* ---------- state ---------- */
@@ -562,7 +585,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 /* images: "db:<id>" refs live in the images collection */
 const imgCache={};
 /* uploads published as public files, so visitors who are not signed in can load them */
-const MEDIA={"ca610ffc6dd3f3fc2876920c693ac3f3":"media/ca610ffc6d.png","8e3acd705472dd7fc598fc07ebe12c6e":"media/8e3acd7054.png","35fb74e2fdfeaf47aad444936cf2b2f2": "media/35fb74e2fd.png", "00793af8dc67f422592085c1e85c66ab": "media/00793af8dc.png", "7c1a35091a18b05f4fa4476fa59e128a": "media/7c1a35091a.png", "8dab9a53bc10573a5e26c53f486c07af": "media/8dab9a53bc.png", "c3bc5b0965649b4e1834f5f145fffb1b": "media/c3bc5b0965.png", "fe151e34d6eb620060531f3231445f6c": "media/fe151e34d6.png", "d15c908b5206d9b31e5ebe8e2661f87b": "media/d15c908b52.png", "429aadbbb81d0ffdf97b73e90131b2a7": "media/429aadbbb8.png", "96261784cbd037a41223babb699bab46": "media/96261784cb.mp4", "efb7b6dd936bc8cc9350ad0d28ec9180": "media/efb7b6dd93.mp4", "b6ffbd51237fcc3d1f6ee3aa0fe974e7": "media/b6ffbd5123.mp4", "bca396d36f8618ee86cbee03456f0343": "media/bca396d36f.jpg", "112afd438cd604ca1217fbd8ddc15bd1": "media/112afd438c.jpg", "0c206c07c705eb58be895ea523044285": "media/0c206c07c7.jpg", "e03188e264688b2f94e5a7eeae9748cc": "media/e03188e264.jpg", "346c11ed4b70a5e772c69ebec56daf35": "media/346c11ed4b.png", "6d4e1a505ef2e592dea1c34cf78abbd8": "media/6d4e1a505e.jpg", "a9867970aa6009296b35ab47e4a3bef2": "media/a9867970aa.jpg", "37d85b2efe96fbd3ab9daa7dc4f92358": "media/37d85b2efe.jpg", "a9b195343d08e639f40144e4f7f5cd52": "media/a9b195343d.mp4", "7fed6b84791eb8e551c0a5e725f1dd8a": "media/7fed6b8479.mp4", "a01158857f6e82fc62cc15b8eed3c5d3": "media/a01158857f.jpg", "8d1d9b6d252026e8bec2848fc4b3a523": "media/8d1d9b6d25.jpg", "b0dea7630b726920f0d776006c1b6983": "media/b0dea7630b.jpg", "afc418b5b79e30ffcbd36f6522ba3e27": "media/afc418b5b7.jpg"};
+const MEDIA={"92a6c48a9b149a56df6c351ebd2e5d31":"media/92a6c48a9b.mp4","28c93df40ddcc7af48ab176e500719e0":"media/28c93df40d.mp4","7279265c545c078bac396ce82281b1ab":"media/7279265c54.mp4","ca610ffc6dd3f3fc2876920c693ac3f3":"media/ca610ffc6d.png","8e3acd705472dd7fc598fc07ebe12c6e":"media/8e3acd7054.png","35fb74e2fdfeaf47aad444936cf2b2f2": "media/35fb74e2fd.png", "00793af8dc67f422592085c1e85c66ab": "media/00793af8dc.png", "7c1a35091a18b05f4fa4476fa59e128a": "media/7c1a35091a.png", "8dab9a53bc10573a5e26c53f486c07af": "media/8dab9a53bc.png", "c3bc5b0965649b4e1834f5f145fffb1b": "media/c3bc5b0965.png", "fe151e34d6eb620060531f3231445f6c": "media/fe151e34d6.png", "d15c908b5206d9b31e5ebe8e2661f87b": "media/d15c908b52.png", "429aadbbb81d0ffdf97b73e90131b2a7": "media/429aadbbb8.png", "96261784cbd037a41223babb699bab46": "media/96261784cb.mp4", "efb7b6dd936bc8cc9350ad0d28ec9180": "media/efb7b6dd93.mp4", "b6ffbd51237fcc3d1f6ee3aa0fe974e7": "media/b6ffbd5123.mp4", "bca396d36f8618ee86cbee03456f0343": "media/bca396d36f.jpg", "112afd438cd604ca1217fbd8ddc15bd1": "media/112afd438c.jpg", "0c206c07c705eb58be895ea523044285": "media/0c206c07c7.jpg", "e03188e264688b2f94e5a7eeae9748cc": "media/e03188e264.jpg", "346c11ed4b70a5e772c69ebec56daf35": "media/346c11ed4b.png", "6d4e1a505ef2e592dea1c34cf78abbd8": "media/6d4e1a505e.jpg", "a9867970aa6009296b35ab47e4a3bef2": "media/a9867970aa.jpg", "37d85b2efe96fbd3ab9daa7dc4f92358": "media/37d85b2efe.jpg", "a9b195343d08e639f40144e4f7f5cd52": "media/a9b195343d.mp4", "7fed6b84791eb8e551c0a5e725f1dd8a": "media/7fed6b8479.mp4", "a01158857f6e82fc62cc15b8eed3c5d3": "media/a01158857f.jpg", "8d1d9b6d252026e8bec2848fc4b3a523": "media/8d1d9b6d25.jpg", "b0dea7630b726920f0d776006c1b6983": "media/b0dea7630b.jpg", "afc418b5b79e30ffcbd36f6522ba3e27": "media/afc418b5b7.jpg"};
 function src(ref){ if(!ref) return ""; if(ref.startsWith("asset:")){ const id=ref.split(":")[1]; return MEDIA[id]||("/_blob/"+id); } if(!ref.startsWith("db:")) return ref; return imgCache[ref]||""; }
 async function loadImg(ref){
   if(!ref||!ref.startsWith("db:")||imgCache[ref]!==undefined||!S.db) return;
@@ -590,6 +613,7 @@ function lbOpen(id,i){
 function lbClose(){ $("#lbStage").innerHTML=""; $("#lb").hidden=true; document.body.style.overflow=""; try{lbFrom&&lbFrom.focus()}catch(e){} }
 document.addEventListener("click",e=>{
   const z=e.target.closest("[data-zoom]"); if(z){ e.stopPropagation(); const box=z.closest(".pd"); lbOpen(z.dataset.zoom,+(box?.dataset.idx||0)); return; }
+  const si=e.target.closest(".pd .stack .st-item>img"); if(si){ const box=si.closest(".pd"); lbOpen(box.id.slice(5),+si.parentElement.dataset.si); return; }
   const im=e.target.closest(".pd .gallery .main>img"); if(im){ const box=im.closest(".pd"); lbOpen(box.id.slice(5),+(box.dataset.idx||0)); return; }
   if($("#lb").hidden) return;
   if(e.target.closest("[data-lbclose]")||e.target.id==="lbStage"){ lbClose(); return; }
@@ -654,6 +678,16 @@ function fitWhyA(){ const el=$("#whyA"); if(!el) return; el.style.removeProperty
   const widest=Math.max(...lines.map(l=>l.getBoundingClientRect().width)); if(widest>avail) el.style.setProperty("--wa-fit",Math.floor(cur*avail/widest*10)/10+"px"); }
 addEventListener("resize",()=>{ try{fitWhyA()}catch(e){} });
 try{document.fonts.ready.then(()=>{ try{fitWhyA()}catch(e){} })}catch(e){}
+const SOUND_WORKS=new Map([["wmv4vi5n6","🔊 這是一首歌，點我開聲音"],["wmv4wc4gr","🔊 點我開聲音"]]);
+const SND_HINT=(id,hide)=>`<button type="button" class="snd-hint" data-snd ${hide?"hidden":""}>${SOUND_WORKS.get(id)}</button>`;
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-snd]"); if(!b) return; e.stopPropagation();
+  const v=b.parentElement.querySelector("video"); if(!v) return;
+  v.muted=false; v.volume=1; v.play().catch(()=>{});
+  v.closest(".pd")&&(v.closest(".pd").dataset.touched=Date.now());
+  b.dataset.done="1"; b.hidden=true; const pd=b.closest(".pd"); if(pd) pd.dataset.sound="1";
+},true);
+document.addEventListener("volumechange",e=>{ const v=e.target; if(v.tagName!=="VIDEO"||v.muted) return; const h=v.parentElement&&v.parentElement.querySelector(".snd-hint"); if(h){h.dataset.done="1";h.hidden=true;} const pd=v.closest(".pd"); if(pd) pd.dataset.sound="1"; },true);
 /* ---------- render ---------- */
 function renderProfile(){
   const p=S.profile;
@@ -687,10 +721,15 @@ function renderShop(){
   const list=visible();
   $("#grid").innerHTML = list.length? list.map((w,n)=>{
     const inCart=S.cart.includes(w.id); const imgs=w.images||[];
-    return `<article class="pd" id="work-${esc(w.id)}" aria-labelledby="t-${esc(w.id)}">
+    const mix=imgs.some(isVid)&&imgs.some(r=>!isVid(r));
+    const order=mix?[...imgs.map((r,i)=>[r,i]).filter(([r])=>isVid(r)),...imgs.map((r,i)=>[r,i]).filter(([r])=>!isVid(r))]:[];
+    return `<article class="pd${mix?" mix":""}" id="work-${esc(w.id)}" aria-labelledby="t-${esc(w.id)}">
       <div class="gallery">
         ${reelsHTML(w)}
-        ${imgs.length?`<div class="main">${media(imgs[0],w.title)}${imgs.length>1?`<button class="nav prev" data-step="-1" data-w="${esc(w.id)}" aria-label="上一張">‹</button><button class="nav next" data-step="1" data-w="${esc(w.id)}" aria-label="下一張">›</button><span class="counter mono"><b>1</b> / ${imgs.length}</span><span class="prog"></span>`:""}<button class="zoom-btn" data-zoom="${esc(w.id)}" aria-label="放大檢視">⤢</button><div class="tagbox">${w.hot?'<span class="tag hot">HOT</span>':""}</div></div>`:""}
+        ${imgs.length?`<div class="main">${media(imgs[0],w.title)}${imgs.length>1?`<button class="nav prev" data-step="-1" data-w="${esc(w.id)}" aria-label="上一張">‹</button><button class="nav next" data-step="1" data-w="${esc(w.id)}" aria-label="下一張">›</button><span class="counter mono"><b>1</b> / ${imgs.length}</span><span class="prog"></span>`:""}${SOUND_WORKS.has(w.id)&&imgs.some(isVid)?SND_HINT(w.id,!isVid(imgs[0])):""}<button class="zoom-btn" data-zoom="${esc(w.id)}" aria-label="放大檢視">⤢</button><div class="tagbox">${w.hot?'<span class="tag hot">HOT</span>':""}</div></div>`:""}
+        ${mix?`<div class="stack">${w.hot?'<div class="tagbox"><span class="tag hot">HOT</span></div>':""}${(()=>{ const vids=order.filter(([r])=>isVid(r)), pics=order.filter(([r])=>!isVid(r)); const v0=vids[0][0];
+          const vhtml=`<div class="st-item${vids.length>1?" playlist":""}" data-si="${vids[0][1]}" ${vids.length>1?`data-list='${esc(JSON.stringify(vids.map(([r])=>r)))}' data-pi="0"`:""}>${SOUND_WORKS.has(w.id)?SND_HINT(w.id):""}<video data-ref="${esc(v0)}" src="${esc(src(v0))}" muted ${vids.length>1?"":"loop"} playsinline autoplay controls preload="metadata" aria-label="${esc(w.title)}"></video>${vids.length>1?`<div class="pl-dots">${vids.map((_,k)=>`<i class="${k?"":"on"}"></i>`).join("")}</div>`:""}</div>`;
+          return vhtml+pics.map(([r,i])=>`<div class="st-item" data-si="${i}">${img(r,w.title)}</div>`).join(""); })()}</div>`:""}
         ${imgs.length>1?`<div class="thumbs">${imgs.map((r,i)=>`<button data-w="${esc(w.id)}" data-gi="${i}" aria-current="${i===0}" aria-label="第 ${i+1} 張">${thumb(r)}</button>`).join("")}</div>`:""}
       </div>
       <div class="pinfo">
@@ -712,8 +751,9 @@ function showSlide(box,i){
   const n=w.images.length; i=((i%n)+n)%n; box.dataset.idx=i;
   const r=w.images[i]; const main=box.querySelector(".main"); const m=main.querySelector(":scope>img,:scope>video"); loadImg(r);
   box.dataset.video=isVid(r)?1:"";
+  { const h=box.querySelector(".main .snd-hint"); if(h) h.hidden=!(isVid(r)&&r===w.images.find(isVid))||h.dataset.done==="1"; }
   m.classList.add("fading");
-  setTimeout(()=>{ const t=document.createElement("template"); t.innerHTML=media(r,w.title); const el=t.content.firstElementChild; el.classList.add("fading"); m.replaceWith(el); requestAnimationFrame(()=>el.classList.remove("fading")); }, reduceMotion?0:220);
+  setTimeout(()=>{ const t=document.createElement("template"); t.innerHTML=media(r,w.title); const el=t.content.firstElementChild; el.classList.add("fading"); if(el.tagName==="VIDEO"&&box.dataset.sound==="1"){ el.muted=false; } m.replaceWith(el); requestAnimationFrame(()=>el.classList.remove("fading")); }, reduceMotion?0:220);
   box.querySelectorAll("[data-gi]").forEach(b=>b.setAttribute("aria-current",+b.dataset.gi===i));
   const c=box.querySelector(".counter b"); if(c) c.textContent=i+1;
   const p=box.querySelector(".prog"); if(p){p.classList.remove("run");void p.offsetWidth;if(!isVid(r))p.classList.add("run");}
@@ -737,7 +777,7 @@ if(!reduceMotion) setInterval(()=>{
 /* a video slide plays to the end, then the carousel moves on */
 document.addEventListener("ended",e=>{ if(e.target.classList?.contains("reel-v")) return; if(e.target.dataset?.touched){ e.target.currentTime=0; e.target.play().catch(()=>{}); return; } const box=e.target.closest?.(".pd"); if(box&&box.querySelector(".nav")&&!box.dataset.hover) showSlide(box,+(box.dataset.idx||0)+1); else if(e.target.play) e.target.play().catch(()=>{}); },true);
 /* measure each work's media once, then lock its stage to the tallest ratio */
-const ratioCache={"asset:bca396d36f8618ee86cbee03456f0343:image": 1.7778, "asset:d15c908b5206d9b31e5ebe8e2661f87b:image": 1.0, "asset:96261784cbd037a41223babb699bab46:video": 1.3333, "asset:7fed6b84791eb8e551c0a5e725f1dd8a:video": 1.7778, "asset:112afd438cd604ca1217fbd8ddc15bd1:image": 1.2495, "asset:6d4e1a505ef2e592dea1c34cf78abbd8:image": 0.9997, "asset:8dab9a53bc10573a5e26c53f486c07af:image": 1.0, "asset:7c1a35091a18b05f4fa4476fa59e128a:image": 1.0, "asset:00793af8dc67f422592085c1e85c66ab:image": 1.0, "asset:8d1d9b6d252026e8bec2848fc4b3a523:image": 1.0, "asset:efb7b6dd936bc8cc9350ad0d28ec9180:video": 0.5625, "asset:e03188e264688b2f94e5a7eeae9748cc:image": 0.75, "asset:c3bc5b0965649b4e1834f5f145fffb1b:image": 1.0, "asset:a9b195343d08e639f40144e4f7f5cd52:video": 1.7778, "asset:b0dea7630b726920f0d776006c1b6983:image": 0.5627, "asset:35fb74e2fdfeaf47aad444936cf2b2f2:image": 1.0, "asset:b6ffbd51237fcc3d1f6ee3aa0fe974e7:video": 1.7778, "asset:afc418b5b79e30ffcbd36f6522ba3e27:image": 0.9997, "asset:fe151e34d6eb620060531f3231445f6c:image": 1.0, "asset:37d85b2efe96fbd3ab9daa7dc4f92358:image": 1.25, "asset:429aadbbb81d0ffdf97b73e90131b2a7:image": 1.0, "asset:0c206c07c705eb58be895ea523044285:image": 0.6641, "asset:a9867970aa6009296b35ab47e4a3bef2:image": 0.5627, "asset:a01158857f6e82fc62cc15b8eed3c5d3:image": 1.0, "asset:346c11ed4b70a5e772c69ebec56daf35:image": 0.7073};
+const ratioCache={"asset:92a6c48a9b149a56df6c351ebd2e5d31:video": 1.7778, "asset:28c93df40ddcc7af48ab176e500719e0:video": 0.5625, "asset:7279265c545c078bac396ce82281b1ab:video": 1.7778, "asset:bca396d36f8618ee86cbee03456f0343:image": 1.7778, "asset:d15c908b5206d9b31e5ebe8e2661f87b:image": 1.0, "asset:96261784cbd037a41223babb699bab46:video": 1.3333, "asset:7fed6b84791eb8e551c0a5e725f1dd8a:video": 1.7778, "asset:112afd438cd604ca1217fbd8ddc15bd1:image": 1.2495, "asset:6d4e1a505ef2e592dea1c34cf78abbd8:image": 0.9997, "asset:8dab9a53bc10573a5e26c53f486c07af:image": 1.0, "asset:7c1a35091a18b05f4fa4476fa59e128a:image": 1.0, "asset:00793af8dc67f422592085c1e85c66ab:image": 1.0, "asset:8d1d9b6d252026e8bec2848fc4b3a523:image": 1.0, "asset:efb7b6dd936bc8cc9350ad0d28ec9180:video": 0.5625, "asset:e03188e264688b2f94e5a7eeae9748cc:image": 0.75, "asset:c3bc5b0965649b4e1834f5f145fffb1b:image": 1.0, "asset:a9b195343d08e639f40144e4f7f5cd52:video": 1.7778, "asset:b0dea7630b726920f0d776006c1b6983:image": 0.5627, "asset:35fb74e2fdfeaf47aad444936cf2b2f2:image": 1.0, "asset:b6ffbd51237fcc3d1f6ee3aa0fe974e7:video": 1.7778, "asset:afc418b5b79e30ffcbd36f6522ba3e27:image": 0.9997, "asset:fe151e34d6eb620060531f3231445f6c:image": 1.0, "asset:37d85b2efe96fbd3ab9daa7dc4f92358:image": 1.25, "asset:429aadbbb81d0ffdf97b73e90131b2a7:image": 1.0, "asset:0c206c07c705eb58be895ea523044285:image": 0.6641, "asset:a9867970aa6009296b35ab47e4a3bef2:image": 0.5627, "asset:a01158857f6e82fc62cc15b8eed3c5d3:image": 1.0, "asset:346c11ed4b70a5e772c69ebec56daf35:image": 0.7073};
 function mediaRatio(ref){
   if(ratioCache[ref]) return Promise.resolve(ratioCache[ref]);
   return new Promise(res=>{
@@ -762,7 +802,7 @@ function renderOrders(){
   $("#orderList").innerHTML=S.exp.map((e,i)=>`<div class="order">
     <div class="no mono">Order #${String(i+1).padStart(3,"0")}<b>${esc(e.start)} – ${esc(e.end)}</b></div>
     <div><h3>${esc(e.company)}<span>${esc(e.role)}</span></h3><ul>${(e.points||[]).map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>
-    <span class="status ${e.status==="進行中"?"live":"done"}">${esc(e.status||"已完成")}</span></div>`).join("");
+    <span class="status ${["已完成","熱銷完售"].includes(e.status||"已完成")?"done":"live"}">${esc((e.status||"已完成")==="已完成"?"熱銷完售":e.status)}</span></div>`).join("");
 }
 function renderCartCount(){ $("#cartCount").textContent=S.cart.filter(id=>S.works.some(w=>w.id===id)).length; }
 function renderAll(){ renderProfile(); renderShop(); renderOrders(); renderCartCount(); if(!$("#aScrim").hidden && !editing && aTab!=="profile") renderAdmin(); }
@@ -807,7 +847,7 @@ function openCart(){
     <div class="body">${items.length? items.map(w=>`<div class="citem">${img(coverOf(w),"")}<div><b style="font-size:14px">${esc(w.title)}</b><div class="mono" style="color:var(--muted)">${esc(w.client)}</div></div><button data-add="${esc(w.id)}">移除</button></div>`).join("")
       : `<div class="note">購物車還是空的。到作品商店按「+」，把喜歡的作品放進來。</div>`}</div>
     <footer><b>聯絡我</b><p>按「傳送訊息」會開新分頁打開 email，收件人和下面這段訊息都已經幫你填好，寄出就完成結帳啦。</p>
-      ${items.length?`<div class="msgbox">${esc(cartMsg(items))}</div><a class="btn primary" data-mailmsg data-ext href="${esc(isMobile()?mailHref(p.email,cartMsg(items)):gmailHref(p.email,cartMsg(items)))}" target="${isMobile()?"_self":"_blank"}" rel="noopener" style="justify-content:center">傳送訊息</a>${isMobile()?``:""}`:""}
+      ${items.length?`<div class="msgbox">${esc(cartMsg(items))}</div><a class="btn primary" data-mailmsg href="${esc(isMobile()?mailHref(p.email,cartMsg(items)):gmailHref(p.email,cartMsg(items)))}" target="${isMobile()?"_self":"_blank"}" rel="noopener" style="justify-content:center">傳送訊息</a>`:""}
       <div class="contact-row" style="border-color:var(--line);font-size:15px"><span>${esc(p.email)}</span><button class="sbtn" data-copy="email">複製</button></div>
       <div class="contact-row" style="border-color:var(--line);font-size:15px"><span>${esc(p.phone)}</span><button class="sbtn" data-copy="phone">複製</button></div>
     </footer>`;
@@ -957,8 +997,8 @@ function adminExpEdit(){
   const e=draft;
   return `<button class="sbtn" data-back>← 回經歷列表</button>
   ${f("ex-co","公司／單位",e.company)}${f("ex-role","職位",e.role)}
-  <div class="two">${f("ex-s","開始",e.start)}${f("ex-e","結束",e.end)}</div>
-  ${f("ex-st","狀態",e.status,{list:["已完成","進行中"]})}
+  <div class="two">${f("ex-s","保存期限",e.start)}${f("ex-e","結束",e.end)}</div>
+  ${f("ex-st","狀態",e.status,{list:["熱銷完售","出貨中","已完成","進行中"]})}
   ${f("ex-pts","工作內容（每行一點）",(e.points||[]).join("\n"),{area:1,rows:5})}
   <div class="save-bar">${S.exp.some(x=>x.id===e.id)?`<button class="sbtn danger" data-del-exp>刪除經歷</button>`:""}<span style="flex:1"></span><button class="btn primary" data-save-exp>儲存經歷</button></div>`;
 }
@@ -1158,6 +1198,16 @@ document.addEventListener("click",e=>{
   el.addEventListener("animationend",()=>el.classList.remove("roll"));
   d.addEventListener("animationend",()=>el.classList.remove("roll"));
 })();
+
+/* desktop playlist: play videos one after another */
+document.addEventListener("ended",e=>{
+  const v=e.target; if(v.tagName!=="VIDEO") return; const pl=v.closest(".playlist"); if(!pl) return;
+  const list=JSON.parse(pl.dataset.list||"[]"); if(list.length<2) return;
+  const i=((+pl.dataset.pi||0)+1)%list.length; pl.dataset.pi=i;
+  const muted=v.muted; v.dataset.ref=list[i]; v.src=src(list[i]); v.muted=muted; v.play().catch(()=>{});
+  pl.querySelectorAll(".pl-dots i").forEach((d,k)=>d.classList.toggle("on",k===i));
+  { const h=pl.querySelector(".snd-hint"); if(h) h.hidden=i!==0||h.dataset.done==="1"; }
+},true);
 </script>
 
 </body>
