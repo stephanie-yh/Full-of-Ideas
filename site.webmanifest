@@ -1,0 +1,22 @@
+{
+  "name": "滿滿Ideas",
+  "short_name": "滿滿Ideas",
+  "start_url": "/Full-of-Ideas/",
+  "display": "standalone",
+  "background_color": "#FCF0B0",
+  "theme_color": "#FCF0B0",
+  "icons": [
+    {
+      "src": "icon-512.png?v=20261016",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png?v=20261016",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
