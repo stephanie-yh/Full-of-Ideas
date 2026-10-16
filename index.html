@@ -747,7 +747,8 @@ function renderShop(){
     </article>`}).join("") : `<div class="empty">這個分類還沒有商品。${S.owner?"從右下角的後台新增作品吧。":""}</div>`;
 }
 /* gallery carousel: auto-advances, pauses on hover/focus or after manual use, only while on screen */
-const SLIDE_MS=1200, reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SLIDE_MS=1200, MOBILE_SLIDE_MS=1800, AUTO_TICK_MS=100, reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function slideDelay(box){ if(!matchMedia("(max-width:820px)").matches) return SLIDE_MS; const firstTwo=S.works.slice().sort((a,b)=>(a.order||0)-(b.order||0)).slice(0,2).map(w=>w.id); return firstTwo.includes(box.id.slice(5))?SLIDE_MS:MOBILE_SLIDE_MS; }
 function showSlide(box,i){
   const w=S.works.find(x=>x.id===box.id.slice(5)); if(!w||!w.images?.length) return;
   const n=w.images.length; i=((i%n)+n)%n; box.dataset.idx=i;
@@ -763,21 +764,24 @@ function showSlide(box,i){
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-w][data-gi],[data-w][data-step]"); if(!g) return;
   const box=g.closest(".pd"); const cur=+(box.dataset.idx||0);
-  box.dataset.manual=Date.now();
+  box.dataset.manual=Date.now(); box.dataset.autoAt=Date.now();
   showSlide(box, g.dataset.step ? cur+(+g.dataset.step) : +g.dataset.gi);
 });
 const onScreen=new Set();
 const io=new IntersectionObserver(es=>es.forEach(en=>{ en.isIntersecting?onScreen.add(en.target):onScreen.delete(en.target); }),{threshold:.35});
-function watchGalleries(){ io.disconnect(); onScreen.clear(); document.querySelectorAll(".pd").forEach(b=>{ b.dataset.video=b.querySelector(".main video,.stack video")?1:(isVid((S.works.find(x=>x.id===b.id.slice(5))?.images||[])[0])?1:""); if(b.querySelector(".nav")){ io.observe(b); b.addEventListener("mouseenter",()=>b.dataset.hover=1); b.addEventListener("mouseleave",()=>delete b.dataset.hover); b.addEventListener("focusin",()=>b.dataset.hover=1); b.addEventListener("focusout",()=>delete b.dataset.hover); const p=b.querySelector(".prog"); if(p) p.classList.add("run"); } }); }
+function watchGalleries(){ io.disconnect(); onScreen.clear(); document.querySelectorAll(".pd").forEach(b=>{ b.dataset.video=b.querySelector(".main video,.stack video")?1:(isVid((S.works.find(x=>x.id===b.id.slice(5))?.images||[])[0])?1:""); b.dataset.autoAt=Date.now(); if(b.querySelector(".nav")){ io.observe(b); b.addEventListener("mouseenter",()=>b.dataset.hover=1); b.addEventListener("mouseleave",()=>delete b.dataset.hover); b.addEventListener("focusin",()=>b.dataset.hover=1); b.addEventListener("focusout",()=>delete b.dataset.hover); const p=b.querySelector(".prog"); if(p) p.classList.add("run"); } }); }
 if(!reduceMotion) setInterval(()=>{
   if(document.hidden) return;
+  const now=Date.now();
   onScreen.forEach(b=>{
-    if(b.dataset.video||b.dataset.hover||(Date.now()-(+b.dataset.manual||0))<6000) return;
+    if(b.dataset.video||b.dataset.hover||(now-(+b.dataset.manual||0))<6000) return;
+    if(now-(+b.dataset.autoAt||now)<slideDelay(b)) return;
+    b.dataset.autoAt=now;
     showSlide(b, +(b.dataset.idx||0)+1);
   });
-}, SLIDE_MS);
+}, AUTO_TICK_MS);
 /* a video slide plays to the end, then the carousel moves on */
-document.addEventListener("ended",e=>{ if(e.target.classList?.contains("reel-v")) return; const box=e.target.closest?.(".pd"); if(box&&box.querySelector(".nav")&&!box.dataset.hover) showSlide(box,+(box.dataset.idx||0)+1); },true);
+document.addEventListener("ended",e=>{ if(e.target.classList?.contains("reel-v")) return; const box=e.target.closest?.(".pd"); if(box&&box.querySelector(".nav")&&!box.dataset.hover){ box.dataset.autoAt=Date.now(); showSlide(box,+(box.dataset.idx||0)+1); } },true);
 /* measure each work's media once, then lock its stage to the tallest ratio */
 const ratioCache={"asset:92a6c48a9b149a56df6c351ebd2e5d31:video": 1.7778, "asset:28c93df40ddcc7af48ab176e500719e0:video": 0.5625, "asset:7279265c545c078bac396ce82281b1ab:video": 1.7778, "asset:bca396d36f8618ee86cbee03456f0343:image": 1.7778, "asset:d15c908b5206d9b31e5ebe8e2661f87b:image": 1.0, "asset:96261784cbd037a41223babb699bab46:video": 1.3333, "asset:7fed6b84791eb8e551c0a5e725f1dd8a:video": 1.7778, "asset:112afd438cd604ca1217fbd8ddc15bd1:image": 1.2495, "asset:6d4e1a505ef2e592dea1c34cf78abbd8:image": 0.9997, "asset:8dab9a53bc10573a5e26c53f486c07af:image": 1.0, "asset:7c1a35091a18b05f4fa4476fa59e128a:image": 1.0, "asset:00793af8dc67f422592085c1e85c66ab:image": 1.0, "asset:8d1d9b6d252026e8bec2848fc4b3a523:image": 1.0, "asset:efb7b6dd936bc8cc9350ad0d28ec9180:video": 0.5625, "asset:e03188e264688b2f94e5a7eeae9748cc:image": 0.75, "asset:c3bc5b0965649b4e1834f5f145fffb1b:image": 1.0, "asset:a9b195343d08e639f40144e4f7f5cd52:video": 1.7778, "asset:b0dea7630b726920f0d776006c1b6983:image": 0.5627, "asset:35fb74e2fdfeaf47aad444936cf2b2f2:image": 1.0, "asset:b6ffbd51237fcc3d1f6ee3aa0fe974e7:video": 1.7778, "asset:afc418b5b79e30ffcbd36f6522ba3e27:image": 0.9997, "asset:fe151e34d6eb620060531f3231445f6c:image": 1.0, "asset:37d85b2efe96fbd3ab9daa7dc4f92358:image": 1.25, "asset:429aadbbb81d0ffdf97b73e90131b2a7:image": 1.0, "asset:0c206c07c705eb58be895ea523044285:image": 0.6641, "asset:a9867970aa6009296b35ab47e4a3bef2:image": 0.5627, "asset:a01158857f6e82fc62cc15b8eed3c5d3:image": 1.0, "asset:346c11ed4b70a5e772c69ebec56daf35:image": 0.7073};
 function mediaRatio(ref){
