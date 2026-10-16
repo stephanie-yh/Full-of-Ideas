@@ -1132,7 +1132,7 @@ renderAll();
   const apply=()=>{
     if(!S.seeded) return;
     if(remote.works) S.works=remote.works;
-    if(remote.exp) S.exp=remote.exp;
+    if(remote.exp) S.exp=remote.exp.map(e=>e.id==="emv9e2woj"?{...e,company:"米蘭數位傳播集團"}:e);
     renderAll();
   };
   db.doc("site/profile").onSnapshot(s=>{
