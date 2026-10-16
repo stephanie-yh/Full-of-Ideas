@@ -1143,26 +1143,7 @@ renderAll();
   db.collection("exp").orderBy("order").onSnapshot(s=>{ remote.exp=s.docs.map(d=>({id:d.id,...clone(d.data())})); apply(); },()=>{});
 })();
 
-/* 影片保險：只在瀏覽器回報載入錯誤時重試一次，避免輪詢下載造成 Chrome 卡頓 */
-(function(){
-  const attempted=new WeakSet(), cache=new Map();
-  function rescue(v){
-    if(!v||attempted.has(v)) return;
-    const u=v.currentSrc||v.getAttribute("src");
-    if(!u||u.startsWith("blob:")) return;
-    attempted.add(v);
-    const p=cache.get(u)||fetch(u,{credentials:"include"}).then(r=>{if(!r.ok) throw r.status; return r.blob();}).then(b=>URL.createObjectURL(b));
-    cache.set(u,p);
-    p.then(bu=>{
-      const t=v.currentTime||0;
-      v.src=bu; v.load();
-      try{v.currentTime=t}catch(e){}
-      if(v.autoplay||v.dataset.playing) v.play().catch(()=>{});
-    }).catch(()=>{});
-  }
-  document.addEventListener("error",e=>{ if(e.target&&e.target.tagName==="VIDEO") rescue(e.target); },true);
-})();
-
+/* 影片播放交給瀏覽器原生處理，避免重新指定 src 造成播放位置跳回。 */
 document.addEventListener("input",e=>{
   if(!["pf-pz","pf-px","pf-py"].includes(e.target.id)) return;
   const q={photoZoom:+$("#pf-pz").value,photoX:+$("#pf-px").value,photoY:+$("#pf-py").value};
