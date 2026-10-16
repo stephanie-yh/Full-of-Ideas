@@ -751,7 +751,7 @@ const SLIDE_MS=2000, reduceMotion=matchMedia("(prefers-reduced-motion: reduce)")
 function showSlide(box,i){
   const w=S.works.find(x=>x.id===box.id.slice(5)); if(!w||!w.images?.length) return;
   const n=w.images.length; i=((i%n)+n)%n; box.dataset.idx=i;
-  const r=w.images[i]; const main=box.querySelector(".main"); const m=main.querySelector(":scope>img,:scope>video"); loadImg(r);
+  const r=w.images[i]; const main=box.querySelector(".main"); const m=main.querySelector(":scope>img,:scope>video"); if(m?.tagName==="VIDEO"){ m.pause(); m.removeAttribute("src"); m.load(); } loadImg(r);
   box.dataset.video=isVid(r)?1:"";
   { const h=box.querySelector(".main .snd-hint"); if(h) h.hidden=!(isVid(r)&&r===w.images.find(isVid))||h.dataset.done==="1"; }
   m.classList.add("fading");
@@ -768,7 +768,7 @@ document.addEventListener("click",e=>{
 });
 const onScreen=new Set();
 const io=new IntersectionObserver(es=>es.forEach(en=>{ en.isIntersecting?onScreen.add(en.target):onScreen.delete(en.target); }),{threshold:.35});
-function watchGalleries(){ io.disconnect(); onScreen.clear(); document.querySelectorAll(".pd").forEach(b=>{ b.dataset.video=isVid((S.works.find(x=>x.id===b.id.slice(5))?.images||[])[0])?1:""; if(b.querySelector(".nav")){ io.observe(b); b.addEventListener("mouseenter",()=>b.dataset.hover=1); b.addEventListener("mouseleave",()=>delete b.dataset.hover); b.addEventListener("focusin",()=>b.dataset.hover=1); b.addEventListener("focusout",()=>delete b.dataset.hover); const p=b.querySelector(".prog"); if(p) p.classList.add("run"); } }); }
+function watchGalleries(){ io.disconnect(); onScreen.clear(); document.querySelectorAll(".pd").forEach(b=>{ b.dataset.video=b.querySelector(".main video")?1:(isVid((S.works.find(x=>x.id===b.id.slice(5))?.images||[])[0])?1:""); if(b.querySelector(".nav")){ io.observe(b); b.addEventListener("mouseenter",()=>b.dataset.hover=1); b.addEventListener("mouseleave",()=>delete b.dataset.hover); b.addEventListener("focusin",()=>b.dataset.hover=1); b.addEventListener("focusout",()=>delete b.dataset.hover); const p=b.querySelector(".prog"); if(p) p.classList.add("run"); } }); }
 if(!reduceMotion) setInterval(()=>{
   if(document.hidden) return;
   onScreen.forEach(b=>{
