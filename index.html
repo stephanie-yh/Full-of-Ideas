@@ -595,7 +595,7 @@ async function loadImg(ref){
   try{const d=await S.db.doc("images/"+ref.slice(3)).get(); if(d.exists){imgCache[ref]=d.data().data; document.querySelectorAll('img[data-ref="'+ref+'"]').forEach(i=>i.src=imgCache[ref]);}}catch(e){}
 }
 const isVid=r=>!!r&&(/\.(mp4|webm|m4v)$/i.test(r)||r.startsWith("vid:")||(r.startsWith("asset:")&&r.endsWith(":video")));
-function media(ref,alt){ return isVid(ref)? `<video data-ref="${esc(ref)}" src="${esc(src(ref))}" muted playsinline autoplay controls preload="auto" aria-label="${esc(alt||"作品影片")}"></video>` : img(ref,alt); }
+function media(ref,alt){ return isVid(ref)? `<video data-ref="${esc(ref)}" src="${esc(src(ref))}" muted playsinline autoplay controls preload="metadata" aria-label="${esc(alt||"作品影片")}"></video>` : img(ref,alt); }
 /* lightbox: click a work image (or ⤢) to see it large */
 let lbW=null, lbI=0, lbFrom=null;
 function lbShow(i){
@@ -777,7 +777,7 @@ if(!reduceMotion) setInterval(()=>{
   });
 }, SLIDE_MS);
 /* a video slide plays to the end, then the carousel moves on */
-document.addEventListener("ended",e=>{ if(e.target.classList?.contains("reel-v")) return; if(e.target.dataset?.touched){ e.target.currentTime=0; e.target.play().catch(()=>{}); return; } const box=e.target.closest?.(".pd"); if(box&&box.querySelector(".nav")&&!box.dataset.hover) showSlide(box,+(box.dataset.idx||0)+1); else if(e.target.play) e.target.play().catch(()=>{}); },true);
+document.addEventListener("ended",e=>{ if(e.target.classList?.contains("reel-v")) return; const box=e.target.closest?.(".pd"); if(box&&box.querySelector(".nav")&&!box.dataset.hover) showSlide(box,+(box.dataset.idx||0)+1); },true);
 /* measure each work's media once, then lock its stage to the tallest ratio */
 const ratioCache={"asset:92a6c48a9b149a56df6c351ebd2e5d31:video": 1.7778, "asset:28c93df40ddcc7af48ab176e500719e0:video": 0.5625, "asset:7279265c545c078bac396ce82281b1ab:video": 1.7778, "asset:bca396d36f8618ee86cbee03456f0343:image": 1.7778, "asset:d15c908b5206d9b31e5ebe8e2661f87b:image": 1.0, "asset:96261784cbd037a41223babb699bab46:video": 1.3333, "asset:7fed6b84791eb8e551c0a5e725f1dd8a:video": 1.7778, "asset:112afd438cd604ca1217fbd8ddc15bd1:image": 1.2495, "asset:6d4e1a505ef2e592dea1c34cf78abbd8:image": 0.9997, "asset:8dab9a53bc10573a5e26c53f486c07af:image": 1.0, "asset:7c1a35091a18b05f4fa4476fa59e128a:image": 1.0, "asset:00793af8dc67f422592085c1e85c66ab:image": 1.0, "asset:8d1d9b6d252026e8bec2848fc4b3a523:image": 1.0, "asset:efb7b6dd936bc8cc9350ad0d28ec9180:video": 0.5625, "asset:e03188e264688b2f94e5a7eeae9748cc:image": 0.75, "asset:c3bc5b0965649b4e1834f5f145fffb1b:image": 1.0, "asset:a9b195343d08e639f40144e4f7f5cd52:video": 1.7778, "asset:b0dea7630b726920f0d776006c1b6983:image": 0.5627, "asset:35fb74e2fdfeaf47aad444936cf2b2f2:image": 1.0, "asset:b6ffbd51237fcc3d1f6ee3aa0fe974e7:video": 1.7778, "asset:afc418b5b79e30ffcbd36f6522ba3e27:image": 0.9997, "asset:fe151e34d6eb620060531f3231445f6c:image": 1.0, "asset:37d85b2efe96fbd3ab9daa7dc4f92358:image": 1.25, "asset:429aadbbb81d0ffdf97b73e90131b2a7:image": 1.0, "asset:0c206c07c705eb58be895ea523044285:image": 0.6641, "asset:a9867970aa6009296b35ab47e4a3bef2:image": 0.5627, "asset:a01158857f6e82fc62cc15b8eed3c5d3:image": 1.0, "asset:346c11ed4b70a5e772c69ebec56daf35:image": 0.7073};
 function mediaRatio(ref){
@@ -1077,10 +1077,10 @@ $("#aDrawer").addEventListener("click",async e=>{
 
 /* upload originals (images + videos) to the artifact's asset store, no compression */
 let pickFor=null;
-const EXT_TYPES={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",webp:"image/webp",gif:"image/gif",mp4:"video/mp4",m4v:"video/mp4",webm:"video/webm",mov:"video/mp4",svg:"image/svg+xml"};
+const EXT_TYPES={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",webp:"image/webp",gif:"image/gif",mp4:"video/mp4",m4v:"video/mp4",webm:"video/webm",mov:"video/quicktime",svg:"image/svg+xml"};
 function upType(file){
   const ext=(file.name.split(".").pop()||"").toLowerCase();
-  if(ext==="mov"||file.type==="video/quicktime") return "video/mp4";   /* .MOV from iPhone/Mac is served as MP4 */
+  if(ext==="mov"||file.type==="video/quicktime") return "video/quicktime";
   if(EXT_TYPES[ext]) return EXT_TYPES[ext];
   return {"image/jpeg":1,"image/png":1,"image/webp":1,"image/gif":1,"video/mp4":1,"video/webm":1}[file.type]?file.type:"";
 }
@@ -1143,18 +1143,24 @@ renderAll();
   db.collection("exp").orderBy("order").onSnapshot(s=>{ remote.exp=s.docs.map(d=>({id:d.id,...clone(d.data())})); apply(); },()=>{});
 })();
 
-/* 影片保險：有些瀏覽器（如無痕模式）無法直接串流影片檔，改用下載後播放 */
+/* 影片保險：只在瀏覽器回報載入錯誤時重試一次，避免輪詢下載造成 Chrome 卡頓 */
 (function(){
-  const done=new WeakSet(), cache={};
+  const attempted=new WeakSet(), cache=new Map();
   function rescue(v){
-    if(!v||done.has(v)) return; const u=v.getAttribute("src"); if(!u||u.startsWith("blob:")) return;
-    done.add(v);
-    const p=cache[u]||(cache[u]=fetch(u,{credentials:"include"}).then(r=>{if(!r.ok) throw r.status; return r.blob();}).then(b=>URL.createObjectURL(new Blob([b],{type:"video/mp4"}))));
-    p.then(bu=>{ const t=v.currentTime||0; v.src=bu; try{v.currentTime=t}catch(e){} if(v.autoplay||v.dataset.playing) v.play().catch(()=>{}); }).catch(()=>{ done.delete(v); delete cache[u]; });
+    if(!v||attempted.has(v)) return;
+    const u=v.currentSrc||v.getAttribute("src");
+    if(!u||u.startsWith("blob:")) return;
+    attempted.add(v);
+    const p=cache.get(u)||fetch(u,{credentials:"include"}).then(r=>{if(!r.ok) throw r.status; return r.blob();}).then(b=>URL.createObjectURL(b));
+    cache.set(u,p);
+    p.then(bu=>{
+      const t=v.currentTime||0;
+      v.src=bu; v.load();
+      try{v.currentTime=t}catch(e){}
+      if(v.autoplay||v.dataset.playing) v.play().catch(()=>{});
+    }).catch(()=>{});
   }
   document.addEventListener("error",e=>{ if(e.target&&e.target.tagName==="VIDEO") rescue(e.target); },true);
-  function scan(){ document.querySelectorAll("video").forEach(v=>{ if(v.readyState===0 && !done.has(v)){ const r=v.getBoundingClientRect(); if(r.bottom>-800&&r.top<innerHeight+800){ if(!v._t0) v._t0=Date.now(); else if(Date.now()-v._t0>3500) rescue(v); } } }); }
-  setInterval(scan,1500);
 })();
 
 document.addEventListener("input",e=>{
