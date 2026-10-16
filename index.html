@@ -749,14 +749,13 @@ function renderShop(){
 /* gallery carousel: auto-advances, pauses on hover/focus or after manual use, only while on screen */
 const SLIDE_MS=2000, reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function showSlide(box,i){
-  if(box.classList.contains("mix")) return;
   const w=S.works.find(x=>x.id===box.id.slice(5)); if(!w||!w.images?.length) return;
   const n=w.images.length; i=((i%n)+n)%n; box.dataset.idx=i;
-  const r=w.images[i]; const main=box.querySelector(".main"); const m=main.querySelector(":scope>img,:scope>video"); if(m?.tagName==="VIDEO"){ m.pause(); m.removeAttribute("src"); m.load(); } loadImg(r);
+  const r=w.images[i]; const main=box.querySelector(".main"); const m=main.querySelector(":scope>img,:scope>video"); if(m?.tagName==="VIDEO"){ videoIO.unobserve(m); m.pause(); m.removeAttribute("src"); m.load(); } loadImg(r);
   box.dataset.video=isVid(r)?1:"";
   { const h=box.querySelector(".main .snd-hint"); if(h) h.hidden=!(isVid(r)&&r===w.images.find(isVid))||h.dataset.done==="1"; }
   m.classList.add("fading");
-  setTimeout(()=>{ const t=document.createElement("template"); t.innerHTML=media(r,w.title); const el=t.content.firstElementChild; el.classList.add("fading"); if(el.tagName==="VIDEO"&&box.dataset.sound==="1"){ el.muted=false; } m.replaceWith(el); requestAnimationFrame(()=>el.classList.remove("fading")); }, reduceMotion?0:220);
+  setTimeout(()=>{ const t=document.createElement("template"); t.innerHTML=media(r,w.title); const el=t.content.firstElementChild; el.classList.add("fading"); if(el.tagName==="VIDEO"&&box.dataset.sound==="1"){ el.muted=false; } m.replaceWith(el); if(el.tagName==="VIDEO") videoIO.observe(el); requestAnimationFrame(()=>el.classList.remove("fading")); }, reduceMotion?0:220);
   box.querySelectorAll("[data-gi]").forEach(b=>b.setAttribute("aria-current",+b.dataset.gi===i));
   const c=box.querySelector(".counter b"); if(c) c.textContent=i+1;
   const p=box.querySelector(".prog"); if(p){p.classList.remove("run");void p.offsetWidth;if(!isVid(r))p.classList.add("run");}
