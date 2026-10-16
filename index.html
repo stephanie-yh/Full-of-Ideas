@@ -730,7 +730,7 @@ function renderShop(){
         ${reelsHTML(w)}
         ${imgs.length?`<div class="main">${media(imgs[0],w.title)}${imgs.length>1?`<button class="nav prev" data-step="-1" data-w="${esc(w.id)}" aria-label="上一張">‹</button><button class="nav next" data-step="1" data-w="${esc(w.id)}" aria-label="下一張">›</button><span class="counter mono"><b>1</b> / ${imgs.length}</span><span class="prog"></span>`:""}${SOUND_WORKS.has(w.id)&&imgs.some(isVid)?SND_HINT(w.id,!isVid(imgs[0])):""}<button class="zoom-btn" data-zoom="${esc(w.id)}" aria-label="放大檢視">⤢</button><div class="tagbox">${w.hot?'<span class="tag hot">HOT</span>':""}</div></div>`:""}
         ${mix?`<div class="stack">${w.hot?'<div class="tagbox"><span class="tag hot">HOT</span></div>':""}${(()=>{ const vids=order.filter(([r])=>isVid(r)), pics=order.filter(([r])=>!isVid(r)); const v0=vids[0][0];
-          const vhtml=`<div class="st-item${vids.length>1?" playlist":""}" data-si="${vids[0][1]}" ${vids.length>1?`data-list='${esc(JSON.stringify(vids.map(([r])=>r)))}' data-pi="0"`:""}>${SOUND_WORKS.has(w.id)?SND_HINT(w.id):""}<video data-ref="${esc(v0)}" src="${esc(src(v0))}" muted loop playsinline autoplay controls preload="metadata" aria-label="${esc(w.title)}"></video>${vids.length>1?`<div class="pl-dots">${vids.map((_,k)=>`<i class="${k?"":"on"}"></i>`).join("")}</div>`:""}</div>`;
+          const vhtml=`<div class="st-item${vids.length>1?" playlist":""}" data-si="${vids[0][1]}" ${vids.length>1?`data-list='${esc(JSON.stringify(vids.map(([r])=>r)))}' data-pi="0"`:""}>${SOUND_WORKS.has(w.id)?SND_HINT(w.id):""}<video data-ref="${esc(v0)}" src="${esc(src(v0))}" muted ${vids.length>1?"":"loop"} playsinline autoplay controls preload="metadata" aria-label="${esc(w.title)}"></video>${vids.length>1?`<div class="pl-dots">${vids.map((_,k)=>`<i class="${k?"":"on"}"></i>`).join("")}</div>`:""}</div>`;
           return vhtml+pics.map(([r,i])=>`<div class="st-item" data-si="${i}">${img(r,w.title)}</div>`).join(""); })()}</div>`:""}
         ${imgs.length>1?`<div class="thumbs">${imgs.map((r,i)=>`<button data-w="${esc(w.id)}" data-gi="${i}" aria-current="${i===0}" aria-label="第 ${i+1} 張">${thumb(r)}</button>`).join("")}</div>`:""}
       </div>
@@ -1203,7 +1203,7 @@ document.addEventListener("ended",e=>{
   const v=e.target; if(v.tagName!=="VIDEO") return; const pl=v.closest(".playlist"); if(!pl) return;
   const list=JSON.parse(pl.dataset.list||"[]"); if(list.length<2) return;
   const i=((+pl.dataset.pi||0)+1)%list.length; pl.dataset.pi=i;
-  const muted=v.muted; v.dataset.ref=list[i]; v.src=src(list[i]); v.muted=muted; v.play().catch(()=>{});
+  const muted=v.muted; v.dataset.ref=list[i]; v.loop=false; v.src=src(list[i]); v.muted=muted; v.play().catch(()=>{});
   pl.querySelectorAll(".pl-dots i").forEach((d,k)=>d.classList.toggle("on",k===i));
   { const h=pl.querySelector(".snd-hint"); if(h) h.hidden=i!==0||h.dataset.done==="1"; }
 },true);
