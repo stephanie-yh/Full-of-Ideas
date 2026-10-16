@@ -595,7 +595,7 @@ async function loadImg(ref){
   try{const d=await S.db.doc("images/"+ref.slice(3)).get(); if(d.exists){imgCache[ref]=d.data().data; document.querySelectorAll('img[data-ref="'+ref+'"]').forEach(i=>i.src=imgCache[ref]);}}catch(e){}
 }
 const isVid=r=>!!r&&(/\.(mp4|webm|m4v)$/i.test(r)||r.startsWith("vid:")||(r.startsWith("asset:")&&r.endsWith(":video")));
-function media(ref,alt){ return isVid(ref)? `<video data-ref="${esc(ref)}" src="${esc(src(ref))}" muted loop playsinline autoplay controls preload="metadata" aria-label="${esc(alt||"作品影片")}"></video>` : img(ref,alt); }
+function media(ref,alt,loop=true){ return isVid(ref)? `<video data-ref="${esc(ref)}" src="${esc(src(ref))}" muted ${loop?"loop ":""}playsinline autoplay controls preload="metadata" aria-label="${esc(alt||"作品影片")}"></video>` : img(ref,alt); }
 /* lightbox: click a work image (or ⤢) to see it large */
 let lbW=null, lbI=0, lbFrom=null;
 function lbShow(i){
@@ -724,15 +724,15 @@ function renderShop(){
   $("#grid").innerHTML = list.length? list.map((w,n)=>{
     const inCart=S.cart.includes(w.id); const imgs=w.images||[];
     const mix=imgs.some(isVid)&&imgs.some(r=>!isVid(r));
-    const order=mix?[...imgs.map((r,i)=>[r,i]).filter(([r])=>isVid(r)),...imgs.map((r,i)=>[r,i]).filter(([r])=>!isVid(r))]:[];
-    return `<article class="pd${mix?" mix":""}" id="work-${esc(w.id)}" aria-labelledby="t-${esc(w.id)}">
+    const order=mix?[...imgs.map((r,i)=>[r,i]).filter(([r])=>isVid(r)),...imgs.map((r,i)=>[r,i]).filter(([r])=>!isVid(r))]:[]; const startIdx=mix?Math.max(0,imgs.findIndex(isVid)):0; const mainRef=imgs[startIdx]||imgs[0];
+    return `<article class="pd${mix?" mix":""}" id="work-${esc(w.id)}" data-idx="${startIdx}" aria-labelledby="t-${esc(w.id)}">
       <div class="gallery">
         ${reelsHTML(w)}
-        ${imgs.length?`<div class="main">${media(imgs[0],w.title)}${imgs.length>1?`<button class="nav prev" data-step="-1" data-w="${esc(w.id)}" aria-label="上一張">‹</button><button class="nav next" data-step="1" data-w="${esc(w.id)}" aria-label="下一張">›</button><span class="counter mono"><b>1</b> / ${imgs.length}</span><span class="prog"></span>`:""}${SOUND_WORKS.has(w.id)&&imgs.some(isVid)?SND_HINT(w.id,!isVid(imgs[0])):""}<button class="zoom-btn" data-zoom="${esc(w.id)}" aria-label="放大檢視">⤢</button><div class="tagbox">${w.hot?'<span class="tag hot">HOT</span>':""}</div></div>`:""}
+        ${imgs.length?`<div class="main">${media(mainRef,w.title,imgs.length<=1)}${imgs.length>1?`<button class="nav prev" data-step="-1" data-w="${esc(w.id)}" aria-label="上一張">‹</button><button class="nav next" data-step="1" data-w="${esc(w.id)}" aria-label="下一張">›</button><span class="counter mono"><b>${startIdx+1}</b> / ${imgs.length}</span><span class="prog"></span>`:""}${SOUND_WORKS.has(w.id)&&imgs.some(isVid)?SND_HINT(w.id,!isVid(mainRef)):""}<button class="zoom-btn" data-zoom="${esc(w.id)}" aria-label="放大檢視">⤢</button><div class="tagbox">${w.hot?'<span class="tag hot">HOT</span>':""}</div></div>`:""}
         ${mix?`<div class="stack">${w.hot?'<div class="tagbox"><span class="tag hot">HOT</span></div>':""}${(()=>{ const vids=order.filter(([r])=>isVid(r)), pics=order.filter(([r])=>!isVid(r)); const v0=vids[0][0];
           const vhtml=`<div class="st-item${vids.length>1?" playlist":""}" data-si="${vids[0][1]}" ${vids.length>1?`data-list='${esc(JSON.stringify(vids.map(([r])=>r)))}' data-pi="0"`:""}>${SOUND_WORKS.has(w.id)?SND_HINT(w.id):""}<video data-ref="${esc(v0)}" src="${esc(src(v0))}" muted ${vids.length>1?"":"loop"} playsinline autoplay controls preload="metadata" aria-label="${esc(w.title)}"></video>${vids.length>1?`<div class="pl-dots">${vids.map((_,k)=>`<i class="${k?"":"on"}"></i>`).join("")}</div>`:""}</div>`;
           return vhtml+pics.map(([r,i])=>`<div class="st-item" data-si="${i}">${img(r,w.title)}</div>`).join(""); })()}</div>`:""}
-        ${imgs.length>1?`<div class="thumbs">${imgs.map((r,i)=>`<button data-w="${esc(w.id)}" data-gi="${i}" aria-current="${i===0}" aria-label="第 ${i+1} 張">${thumb(r)}</button>`).join("")}</div>`:""}
+        ${imgs.length>1?`<div class="thumbs">${imgs.map((r,i)=>`<button data-w="${esc(w.id)}" data-gi="${i}" aria-current="${i===startIdx}" aria-label="第 ${i+1} 張">${thumb(r)}</button>`).join("")}</div>`:""}
       </div>
       <div class="pinfo">
         <div class="top"><span class="num">${String(n+1).padStart(2,"0")}</span></div>
@@ -747,7 +747,7 @@ function renderShop(){
     </article>`}).join("") : `<div class="empty">這個分類還沒有商品。${S.owner?"從右下角的後台新增作品吧。":""}</div>`;
 }
 /* gallery carousel: auto-advances, pauses on hover/focus or after manual use, only while on screen */
-const SLIDE_MS=2000, reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SLIDE_MS=1200, reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function showSlide(box,i){
   const w=S.works.find(x=>x.id===box.id.slice(5)); if(!w||!w.images?.length) return;
   const n=w.images.length; i=((i%n)+n)%n; box.dataset.idx=i;
@@ -755,7 +755,7 @@ function showSlide(box,i){
   box.dataset.video=isVid(r)?1:"";
   { const h=box.querySelector(".main .snd-hint"); if(h) h.hidden=!(isVid(r)&&r===w.images.find(isVid))||h.dataset.done==="1"; }
   m.classList.add("fading");
-  setTimeout(()=>{ const t=document.createElement("template"); t.innerHTML=media(r,w.title); const el=t.content.firstElementChild; el.classList.add("fading"); if(el.tagName==="VIDEO"&&box.dataset.sound==="1"){ el.muted=false; } m.replaceWith(el); if(el.tagName==="VIDEO") videoIO.observe(el); requestAnimationFrame(()=>el.classList.remove("fading")); }, reduceMotion?0:220);
+  setTimeout(()=>{ const t=document.createElement("template"); t.innerHTML=media(r,w.title,w.images.length<=1); const el=t.content.firstElementChild; el.classList.add("fading"); if(el.tagName==="VIDEO"&&box.dataset.sound==="1"){ el.muted=false; } m.replaceWith(el); if(el.tagName==="VIDEO") videoIO.observe(el); requestAnimationFrame(()=>el.classList.remove("fading")); }, reduceMotion?0:220);
   box.querySelectorAll("[data-gi]").forEach(b=>b.setAttribute("aria-current",+b.dataset.gi===i));
   const c=box.querySelector(".counter b"); if(c) c.textContent=i+1;
   const p=box.querySelector(".prog"); if(p){p.classList.remove("run");void p.offsetWidth;if(!isVid(r))p.classList.add("run");}
